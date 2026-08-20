@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from ml.tracking.mlflow_tracker import (
     start_run,
@@ -43,7 +43,8 @@ def test_log_training_run(
     mock_log_model,
 ):
 
-    model = object()
+    model = MagicMock()
+    signature = MagicMock()
 
     parameters = {
         "model_type": "logistic_regression",
@@ -58,6 +59,7 @@ def test_log_training_run(
 
     log_training_run(
         model=model,
+        signature=signature,
         parameters=parameters,
         metrics=metrics,
     )
@@ -73,5 +75,6 @@ def test_log_training_run(
     mock_log_model.assert_called_once_with(
         model,
         name="model",
+        signature=signature,
         skops_trusted_types=["numpy.dtype"],
     )

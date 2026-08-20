@@ -21,6 +21,7 @@ def start_run(
 
 def log_training_run(
     model: Any,
+    signature: Any,
     parameters: dict,
     metrics: dict[str, float],
 ) -> None:
@@ -31,5 +32,6 @@ def log_training_run(
     mlflow.sklearn.log_model(
         model,
         name="model",
+        signature=signature,
         skops_trusted_types=["numpy.dtype"],
     )

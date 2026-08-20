@@ -1,3 +1,4 @@
+from mlflow.models import infer_signature
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
@@ -66,6 +67,10 @@ class TrainingPipeline():
                 model_parameters=config.model.parameters,
             )
 
+            #8.5 create the signature
+            predictions = model.predict(X_train)
+            signature = infer_signature(X_train,predictions)
+
             # 9. Evaluate model
             metrics = evaluate_model(
                 model=model,
@@ -76,6 +81,7 @@ class TrainingPipeline():
             # 10. Log results to MLflow
             log_training_run(
                 model=model,
+                signature=signature,
                 parameters={
                     "model_type": config.model.type,
                     **config.model.parameters,
