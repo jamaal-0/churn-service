@@ -8,14 +8,21 @@ from ml.tracking.mlflow_tracker import (
 
 @patch("ml.tracking.mlflow_tracker.mlflow.start_run")
 @patch("ml.tracking.mlflow_tracker.mlflow.set_experiment")
+@patch("ml.tracking.mlflow_tracker.mlflow.set_tracking_uri")
 def test_start_run(
+    mock_set_tracking_uri,
     mock_set_experiment,
     mock_start_run,
 ):
 
     start_run(
+        tracking_uri="http://127.0.0.1:5000",
         experiment_name="churn-service",
         run_name="test-run",
+    )
+
+    mock_set_tracking_uri.assert_called_once_with(
+        "http://127.0.0.1:5000"
     )
 
     mock_set_experiment.assert_called_once_with(
@@ -66,4 +73,5 @@ def test_log_training_run(
     mock_log_model.assert_called_once_with(
         model,
         name="model",
+        skops_trusted_types=["numpy.dtype"],
     )

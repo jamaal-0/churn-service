@@ -5,9 +5,12 @@ import mlflow.sklearn
 
 
 def start_run(
+    tracking_uri: str,
     experiment_name: str,
     run_name: str | None = None,
-) -> Any:
+):
+
+    mlflow.set_tracking_uri(tracking_uri)
 
     mlflow.set_experiment(experiment_name)
 
@@ -28,4 +31,5 @@ def log_training_run(
     mlflow.sklearn.log_model(
         model,
         name="model",
+        skops_trusted_types=["numpy.dtype"],
     )

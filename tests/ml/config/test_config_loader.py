@@ -27,6 +27,7 @@ def test_load_config_valid(tmp_path):
             },
         },
         "mlflow": {
+            "tracking_uri": "http://127.0.0.1:5000",
             "experiment_name": "churn-service",
         },
     }
@@ -42,6 +43,8 @@ def test_load_config_valid(tmp_path):
     assert config.problem.type == "classification"
     assert config.split.test_size == 0.2
     assert config.model.type == "logistic_regression"
+
+    assert config.mlflow.tracking_uri == "http://127.0.0.1:5000"
     assert config.mlflow.experiment_name == "churn-service"
 
 
@@ -73,6 +76,7 @@ def test_load_config_invalid_schema(tmp_path):
             "parameters": {},
         },
         "mlflow": {
+            "tracking_uri": "http://127.0.0.1:5000",
             "experiment_name": "churn-service",
         },
     }

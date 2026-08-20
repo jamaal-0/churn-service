@@ -23,6 +23,7 @@ class ModelConfig(BaseModel):
 
 
 class MLflowConfig(BaseModel):
+    tracking_uri: str
     experiment_name: str
 
 

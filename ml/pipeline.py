@@ -53,8 +53,9 @@ class TrainingPipeline():
 
         # 7. Start MLflow run
         with start_run(
-            experiment_name=config.mlflow.experiment_name
-        ):
+            tracking_uri=config.mlflow.tracking_uri, 
+            experiment_name=config.mlflow.experiment_name,
+            ):
 
             # 8. Train model
             model = train_model(
@@ -83,3 +84,17 @@ class TrainingPipeline():
             )
 
         return metrics
+
+
+
+if __name__ == "__main__":
+    pipeline = TrainingPipeline()
+
+    metrics = pipeline.run_pipeline(
+        "ml/config/telco.yaml"
+    )
+
+    print("\nEvaluation metrics:")
+
+    for name, value in metrics.items():
+        print(f"{name}: {value:.4f}")

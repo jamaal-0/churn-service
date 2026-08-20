@@ -16,7 +16,7 @@ def test_training_pipeline(
     pipeline = TrainingPipeline()
 
     metrics = pipeline.run_pipeline(
-        "ml/config/teleco.yaml"
+        "ml/config/telco.yaml"
     )
 
     # Pipeline should return evaluation metrics
@@ -38,7 +38,10 @@ def test_training_pipeline(
         assert 0 <= value <= 1
 
     # MLflow run should have been started
-    mock_start_run.assert_called_once()
+    mock_start_run.assert_called_once_with(
+        tracking_uri="http://127.0.0.1:5000",
+        experiment_name="churn-service",
+    )
 
     # Training results should have been logged
     mock_log_training_run.assert_called_once()
