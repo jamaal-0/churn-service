@@ -15,3 +15,6 @@ htmlcov/
 
 # macOS
 .DS_Store
+
+# Local data
+/data

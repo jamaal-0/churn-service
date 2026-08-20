@@ -1,0 +1,20 @@
+data:
+  path: data/telco_churn.csv
+  target: Churn
+  drop_columns:
+    - customerID
+
+problem:
+  type: classification
+
+split:
+  test_size: 0.2
+  random_state: 42
+
+model:
+  type: logistic_regression
+  parameters:
+    max_iter: 1000
+
+mlflow:
+  experiment_name: churn-service
