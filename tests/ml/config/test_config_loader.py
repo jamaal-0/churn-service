@@ -76,7 +76,7 @@ def test_load_config_invalid_schema(tmp_path):
             "parameters": {},
         },
         "mlflow": {
-            "tracking_uri": "http://127.0.0.1:5000",
+
             "experiment_name": "churn-service",
         },
     }

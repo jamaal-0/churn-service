@@ -13,7 +13,7 @@ def create_model(
     parameters: dict[str, Any],
 ):
     if model_type == "logistic_regression":
-        return LogisticRegression(**parameters)
+        return LogisticRegression(**parameters, random_state=42)
 
     raise ValueError(
         f"Unsupported model type: {model_type}"

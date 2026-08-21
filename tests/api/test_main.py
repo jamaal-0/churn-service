@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pandas as pd
 from fastapi.testclient import TestClient
-from api.config import (
+from env_config.environment import (
     MLFLOW_TRACKING_URI,
     MLFLOW_MODEL_NAME,
     MLFLOW_MODEL_VERSION,

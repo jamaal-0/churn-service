@@ -10,23 +10,23 @@ def test_get_required_env(monkeypatch):
         "test-value",
     )
 
-    import api.config as config
+    import env_config.environment as environment
 
     assert (
-        config.get_required_env("TEST_VARIABLE")
+        environment.get_required_env("TEST_VARIABLE")
         == "test-value"
     )
 
 
 def test_get_required_env_missing_variable():
 
-    import api.config as config
+    import env_config.environment as environment
 
     with pytest.raises(
         RuntimeError,
         match="Required environment variable 'MISSING_VARIABLE' is not set",
     ):
-        config.get_required_env(
+        environment.get_required_env(
             "MISSING_VARIABLE"
         )
 
@@ -50,21 +50,21 @@ def test_environment_configuration(
         "99",
     )
 
-    import api.config as config
+    import env_config.environment as environment
 
-    importlib.reload(config)
+    importlib.reload(environment)
 
     assert (
-        config.MLFLOW_TRACKING_URI
+        environment.MLFLOW_TRACKING_URI
         == "http://test-mlflow:5000"
     )
 
     assert (
-        config.MLFLOW_MODEL_NAME
+        environment.MLFLOW_MODEL_NAME
         == "test-model"
     )
 
     assert (
-        config.MLFLOW_MODEL_VERSION
+        environment.MLFLOW_MODEL_VERSION
         == "99"
     )

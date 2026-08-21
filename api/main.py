@@ -4,11 +4,12 @@ from fastapi import FastAPI, HTTPException
 
 from api.services.model_service import ModelService
 from api.schemas import SingleInputSchema, BatchInputSchema
-from api.config import (
+from env_config.environment import (
     MLFLOW_TRACKING_URI,
     MLFLOW_MODEL_NAME,
-    MLFLOW_MODEL_VERSION,
-)
+    MLFLOW_MODEL_VERSION
+    )
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
