@@ -76,6 +76,41 @@ class SignatureValidator:
             columns=expected_columns,
         )
 
+    def validate_batch(
+        self,
+        batch: list[dict[str, Any]],
+    ) -> pd.DataFrame:
+
+        if self.signature is None:
+            raise RuntimeError(
+                "Model signature has not been loaded."
+            )
+
+        if not batch:
+            raise ValueError(
+                "Batch cannot be empty."
+            )
+
+        validated_rows = []
+
+        for features in batch:
+
+            validated = self.validate(
+                features
+            )
+
+            validated_rows.append(
+                validated.iloc[0].to_dict()
+            )
+
+        return pd.DataFrame(
+            validated_rows,
+            columns=[
+                field.name
+                for field in self.signature.inputs.inputs
+            ],
+        )
+
     @staticmethod
     def _is_valid_type(
         value: Any,
@@ -106,8 +141,6 @@ class SignatureValidator:
         if expected_type == DataType.string:
             return isinstance(value, str)
 
-        # For unsupported MLflow types, don't silently
-        # claim that validation succeeded.
         raise ValueError(
             f"Unsupported MLflow input type: "
             f"{expected_type}"

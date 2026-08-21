@@ -44,27 +44,22 @@ def test_load_model(
 
     service.load_model()
 
-    # Tracking URI should be configured
     mock_set_tracking_uri.assert_called_once_with(
         "http://127.0.0.1:5000"
     )
 
-    # Model should be loaded
     mock_load_model.assert_called_once_with(
         "models:/churn-model/1"
     )
 
-    # Model metadata should be retrieved
     mock_get_model_info.assert_called_once_with(
         "models:/churn-model/1"
     )
 
-    # Signature should be passed to validator
     mock_signature_validator.assert_called_once_with(
         mock_signature
     )
 
-    # Service should store the loaded components
     assert service.model is mock_model
     assert service.signature is mock_signature
     assert service.validator is mock_validator
@@ -83,6 +78,21 @@ def test_validate_input_without_model():
         match="Model has not been loaded",
     ):
         service.validate_input({})
+
+
+def test_validate_batch_without_model():
+
+    service = ModelService(
+        tracking_uri="http://127.0.0.1:5000",
+        model_name="churn-model",
+        model_version="1",
+    )
+
+    with pytest.raises(
+        RuntimeError,
+        match="Model has not been loaded",
+    ):
+        service.validate_batch([])
 
 
 def test_predict_without_model():
@@ -140,6 +150,42 @@ def test_validate_input():
 
     service.validator.validate.assert_called_once_with(
         features
+    )
+
+    assert result is expected_result
+
+
+def test_validate_batch():
+
+    service = ModelService(
+        tracking_uri="http://127.0.0.1:5000",
+        model_name="churn-model",
+        model_version="1",
+    )
+
+    service.validator = MagicMock()
+
+    batch = [
+        {
+            "gender": "Female",
+            "tenure": 12,
+        },
+        {
+            "gender": "Male",
+            "tenure": 48,
+        },
+    ]
+
+    expected_result = MagicMock()
+
+    service.validator.validate_batch.return_value = (
+        expected_result
+    )
+
+    result = service.validate_batch(batch)
+
+    service.validator.validate_batch.assert_called_once_with(
+        batch
     )
 
     assert result is expected_result

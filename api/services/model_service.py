@@ -74,3 +74,16 @@ class ModelService:
             )
 
         return self.model.predict_proba(X)
+
+    def validate_batch(
+        self,
+        batch: list[dict],
+    ):
+        if self.validator is None:
+            raise RuntimeError(
+                "Model has not been loaded."
+            )
+
+        return self.validator.validate_batch(
+            batch
+        )

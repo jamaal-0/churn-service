@@ -1,5 +1,5 @@
-import pytest
 import pandas as pd
+import pytest
 
 from mlflow.models import ModelSignature
 from mlflow.types import Schema, ColSpec
@@ -150,6 +150,120 @@ def test_invalid_string_type_raises_error(
         validator.validate(features)
 
 
+def test_valid_batch_returns_dataframe(
+    validator,
+):
+
+    batch = [
+        {
+            "gender": "Female",
+            "SeniorCitizen": 0,
+            "tenure": 12,
+            "MonthlyCharges": 70.5,
+        },
+        {
+            "gender": "Male",
+            "SeniorCitizen": 1,
+            "tenure": 48,
+            "MonthlyCharges": 90.2,
+        },
+    ]
+
+    result = validator.validate_batch(batch)
+
+    assert isinstance(result, pd.DataFrame)
+
+    assert list(result.columns) == [
+        "gender",
+        "SeniorCitizen",
+        "tenure",
+        "MonthlyCharges",
+    ]
+
+    assert len(result) == 2
+
+    assert result.iloc[0]["gender"] == "Female"
+    assert result.iloc[0]["SeniorCitizen"] == 0
+    assert result.iloc[0]["tenure"] == 12
+    assert result.iloc[0]["MonthlyCharges"] == 70.5
+
+    assert result.iloc[1]["gender"] == "Male"
+    assert result.iloc[1]["SeniorCitizen"] == 1
+    assert result.iloc[1]["tenure"] == 48
+    assert result.iloc[1]["MonthlyCharges"] == 90.2
+
+
+def test_empty_batch_raises_error(
+    validator,
+):
+
+    with pytest.raises(
+        ValueError,
+        match="Batch cannot be empty",
+    ):
+        validator.validate_batch([])
+
+
+def test_batch_missing_feature_raises_error(
+    validator,
+):
+
+    batch = [
+        {
+            "gender": "Female",
+            "SeniorCitizen": 0,
+            "tenure": 12,
+        },
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match="Missing required features",
+    ):
+        validator.validate_batch(batch)
+
+
+def test_batch_extra_feature_raises_error(
+    validator,
+):
+
+    batch = [
+        {
+            "gender": "Female",
+            "SeniorCitizen": 0,
+            "tenure": 12,
+            "MonthlyCharges": 70.5,
+            "UnexpectedFeature": 123,
+        },
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match="Unexpected features",
+    ):
+        validator.validate_batch(batch)
+
+
+def test_batch_invalid_type_raises_error(
+    validator,
+):
+
+    batch = [
+        {
+            "gender": "Female",
+            "SeniorCitizen": "yes",
+            "tenure": 12,
+            "MonthlyCharges": 70.5,
+        },
+    ]
+
+    with pytest.raises(
+        ValueError,
+        match="Invalid type for feature 'SeniorCitizen'",
+    ):
+        validator.validate_batch(batch)
+
+
 def test_missing_signature_raises_error():
 
     validator = SignatureValidator(None)
@@ -159,3 +273,23 @@ def test_missing_signature_raises_error():
         match="Model signature has not been loaded",
     ):
         validator.validate({})
+
+
+def test_batch_missing_signature_raises_error():
+
+    validator = SignatureValidator(None)
+
+    with pytest.raises(
+        RuntimeError,
+        match="Model signature has not been loaded",
+    ):
+        validator.validate_batch(
+            [
+                {
+                    "gender": "Female",
+                    "SeniorCitizen": 0,
+                    "tenure": 12,
+                    "MonthlyCharges": 70.5,
+                }
+            ]
+        )
