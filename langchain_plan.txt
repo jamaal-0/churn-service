@@ -1,0 +1,46 @@
+the goal of the agent ochestration is to, given a well defined prompt, automate the system from planning to mlflow registry 
+
+current the whole system is carried out by the training pipeline + the model registry code 
+
+the current inputs are the config file and the success criteria of the registry file
+
+how would the pipeline system change:
+    currently it is deterministic,
+    but as we introduce variablilty in the:
+        model choice
+        evaluation metrics
+
+    The LLMs has meaningful impact in determining which ones to use holistically given the prompt 
+
+    first:
+    implement the code for the different models
+    then implement the code for the different evaluation metrics given the business definition 
+
+    once this has been completed:
+        create the different nodes:
+        orchestrator node:
+            input: the pieline state 
+
+        planning node:
+            given the initial prompt
+            this will output the model and evaluation metrics to use and store it in the pipeline state        
+
+        training node:
+            from the pipeline state, use the model and evaluation metrics to execute the pipeline
+            this is the location in which we will do the iterative feature engineering to try and maximise the singal
+
+        critic node:
+            this node will determine the shortfalls of the current model 
+            and replan in order to try and find a way to overcome this/these shortcoming 
+
+        registry node:
+            this node will call the models with the same name and compare them 
+            then select the best model to registry as the challanger
+
+        once a given node has been registered, it sends a signal to the mlops orchestrator to update 
+        
+
+        
+
+
+
