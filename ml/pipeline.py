@@ -6,12 +6,14 @@ from ml.config.loader import load_config
 from ml.data.loader import load_data
 from ml.data.validator import validate_dataset
 from ml.data.schema_inference import infer_schema
+from ml.selection.model_selector import select_best_run
 from ml.training.trainer import train_model
 from ml.evaluation.evaluator import evaluate_model
 from ml.tracking.mlflow_tracker import (
     start_run,
     log_training_run,
 )
+from ml.registry.model_registry import register_model
 
 class TrainingPipeline():
     def __init__(self):
@@ -90,6 +92,22 @@ class TrainingPipeline():
             )
 
         return metrics
+
+    def register_best_model(self, constraints):
+        best_run_id = select_best_run(
+            experiment_name="churn-service",
+            primary_metric="roc_auc",
+            **constraints
+            )
+
+        print(best_run_id)
+
+        version = register_model(
+            run_id=best_run_id,
+            model_name="churn-model")
+
+        print(f"Registered model version: {version}")
+
 
 
 

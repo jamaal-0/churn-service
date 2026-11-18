@@ -75,24 +75,24 @@ def select_best_run(
     return best_run["run_id"]
 
 
-if __name__ == "__main__":
-    best_run_id = select_best_run(
-        experiment_name="churn-service",
-        primary_metric="roc_auc",
-        constraints={
-            "recall": 0.55,
-            },
-        )
+# if __name__ == "__main__":
+#     best_run_id = select_best_run(
+#         experiment_name="churn-service",
+#         primary_metric="roc_auc",
+#         constraints={
+#             "recall": 0.55,
+#             },
+#         )
 
-    print(best_run_id)
-    from ml.registry.model_registry import register_model
+#     print(best_run_id)
+#     from ml.registry.model_registry import register_model
 
-    version = register_model(
+#     version = register_model(
 
-        run_id=best_run_id,
+#         run_id=best_run_id,
 
-        model_name="churn-model",
+#         model_name="churn-model",
 
-    )
+#     )
 
-    print(f"Registered model version: {version}")
+#     print(f"Registered model version: {version}")

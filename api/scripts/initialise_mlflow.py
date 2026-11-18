@@ -22,3 +22,5 @@ def main():
         run_id=best_run_id,
         model_name="churn-model",
     )
+
+main()

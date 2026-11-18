@@ -1,0 +1,18 @@
+to-do-list:
+revise mlflow 
+deploy to aws 
+test through aws 
+
+
+
+Understand how versioning works with mlflow, manual or automatic?
+    Push to aws:
+        Create docker images 
+        Create ECR repo
+        Upload docker images to ECR
+        Create cluster 
+        Create task family 
+        Create services 
+        Create task defs 
+        Deploy on AWS
+
