@@ -69,9 +69,10 @@ class TrainingPipeline():
                 model_parameters=config.model.parameters,
             )
 
-            #8.5 create the signature
-            predictions = model.predict(X_train)
-            signature = infer_signature(X_train,predictions)
+            # 8.5 Create signature
+            input_example = X_train.head(5)
+            predictions = model.predict(input_example)
+            signature = infer_signature(input_example, predictions)
 
             # 9. Evaluate model
             metrics = evaluate_model(

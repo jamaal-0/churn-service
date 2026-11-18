@@ -20,7 +20,7 @@ def main():
 
     _ = register_model(
         run_id=best_run_id,
-        model_name="churn-model",
+        model_name="churn-model_test",
     )
 
 main()
