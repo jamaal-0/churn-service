@@ -23,4 +23,5 @@ def main():
         model_name="churn-model_test",
     )
 
-main()
+if __name__ == "__main__":
+    main()
